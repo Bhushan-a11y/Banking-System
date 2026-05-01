@@ -1,0 +1,51 @@
+package com.example.demo;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@RestController
+public class TransactionController {
+    @Autowired
+    TransactionService transactionService;
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+class Transfer{//DTO-> Data Transfer Object
+    Long senderId;
+    Long recieverId;
+    BigDecimal amount;
+    
+}
+@PostMapping("/transaction")
+public ResponseEntity<?> transferAmount(@RequestBody Transfer transfer){
+    try {
+        transactionService.transferAmount(transfer.getSenderId(),transfer.getRecieverId(),transfer.getAmount());
+        return new ResponseEntity<>(HttpStatus.OK);
+        
+    } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    
+}
+@GetMapping("/transaction/{accId}")
+public ResponseEntity<?> getTransactionHistory(@PathVariable Long accId){
+    List<Transaction> trans = transactionService.getHistory(accId);
+    if(trans!=null&&!trans.isEmpty()){
+        return new ResponseEntity<>(trans,HttpStatus.OK);
+    }
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+}
+}
