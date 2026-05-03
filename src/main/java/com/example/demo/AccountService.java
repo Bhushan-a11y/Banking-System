@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class AccountService {
     }
 
     public boolean createAccount(Account account) {
+        account.setCreatedAt(LocalDateTime.now());
+
+
         accountRepository.save(account);
         return true;
     }

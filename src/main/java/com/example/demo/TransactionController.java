@@ -23,7 +23,7 @@ public class TransactionController {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-class Transfer{//DTO-> Data Transfer Object
+    static class Transfer{//DTO-> Data Transfer Object
     Long senderId;
     Long recieverId;
     BigDecimal amount;
@@ -36,7 +36,7 @@ public ResponseEntity<?> transferAmount(@RequestBody Transfer transfer){
         return new ResponseEntity<>(HttpStatus.OK);
         
     } catch (Exception e) {
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
     }
     
 }
