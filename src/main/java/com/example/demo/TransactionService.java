@@ -36,6 +36,7 @@ public class TransactionService {
         transaction.setReceiverAccount(reciver);
         transaction.setSenderAccount(sender);
         transaction.setMadeAT(LocalDateTime.now());
+        transaction.setTransactionType("Transfer");
         
         accountRepository.save(sender);
         accountRepository.save(reciver);
@@ -51,6 +52,44 @@ public class TransactionService {
     public List<Transaction> getHistory(Long accId){
         Account account = accountRepository.findById(accId).orElse(null);
         return transactionRepository.findBySenderAccountOrReceiverAccount(account, account);
+    }
+    @Transactional
+    public String deposit(BigDecimal amount) {
+       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userRepository.findByUserName(userName);
+        Account reciever  = user.getUserAccount();
+        if(reciever.getBalance().compareTo(amount)<0){
+            throw new RuntimeException("Insufficient Bank Balance");
+        }
+        reciever.setBalance(reciever.getBalance().add(amount));
+         Transaction transaction = new Transaction();
+        transaction.setTransAmount(amount);
+        transaction.setReceiverAccount(reciever);
+        transaction.setSenderAccount(reciever);
+        transaction.setMadeAT(LocalDateTime.now());
+        transaction.setTransactionType("Deposit");
+        return "Deposit successful";
+        
+    }
+    @Transactional
+    public String withdrawal(BigDecimal amount) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userRepository.findByUserName(userName);
+        Account reciever  = user.getUserAccount();
+        if(reciever.getBalance().compareTo(amount)<0){
+            throw new RuntimeException("Insufficient Bank Balance");
+        }
+        reciever.setBalance(reciever.getBalance().subtract(amount));
+         Transaction transaction = new Transaction();
+        transaction.setTransAmount(amount);
+        transaction.setReceiverAccount(reciever);
+        transaction.setSenderAccount(reciever);
+        transaction.setMadeAT(LocalDateTime.now());
+        transaction.setTransactionType("Withdrawal");
+        return "Withdrawal successful";
+       
     }
 
 }
