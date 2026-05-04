@@ -24,7 +24,6 @@ public class TransactionController {
     @NoArgsConstructor
     @AllArgsConstructor
     static class Transfer{//DTO-> Data Transfer Object
-    Long senderId;
     Long recieverId;
     BigDecimal amount;
     
@@ -32,7 +31,7 @@ public class TransactionController {
 @PostMapping("/transaction")
 public ResponseEntity<?> transferAmount(@RequestBody Transfer transfer){
     try {
-        transactionService.transferAmount(transfer.getSenderId(),transfer.getRecieverId(),transfer.getAmount());
+        transactionService.transferAmount(transfer.getRecieverId(),transfer.getAmount());
         return new ResponseEntity<>(HttpStatus.OK);
         
     } catch (Exception e) {

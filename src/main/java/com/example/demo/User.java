@@ -1,6 +1,9 @@
 package com.example.demo;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,8 +25,10 @@ public class User {
     private String userName;
     @Column(nullable = false,unique = true)
     private String password;
+    List<String> roles = new ArrayList<>();
     @OneToOne
     Account userAccount;
+   
 
 
 }

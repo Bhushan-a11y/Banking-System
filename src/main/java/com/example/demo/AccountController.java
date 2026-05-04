@@ -13,22 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController {
     @Autowired
     private AccountService accountService;
-@GetMapping("/accounts/get-all-accounts")
-public ResponseEntity<?>getAllAccounts(){
-    List<Account> all = accountService.getAllAccounts();
-    if(all!=null && !all.isEmpty()){
-        return new ResponseEntity<>(all,HttpStatus.OK);
-    }
-    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    
-    
-}
-@PostMapping("/accounts/create-account")
-public ResponseEntity<?>createAccount(@RequestBody Account account){
-    boolean bool = accountService.createAccount(account);
-    if(bool){
-        return new ResponseEntity<>(account,HttpStatus.CREATED);
-    }
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-}
+
+
 }

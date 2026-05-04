@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -17,8 +18,13 @@ public class TransactionService {
     private AccountRepository accountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
-    public String transferAmount(Long senderId,Long receiverId,BigDecimal amount){
-        Account sender  = accountRepository.findById(senderId).orElse(null);
+    @Autowired
+    private UserRepository userRepository;
+    public String transferAmount(Long receiverId,BigDecimal amount){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userRepository.findByUserName(userName);
+        Account sender  = user.getUserAccount();
         Account reciver = accountRepository.findById(receiverId).orElse(null);
         if(sender.getBalance().compareTo(amount)<0){
             throw new RuntimeException("Insufficient Bank Balance");
