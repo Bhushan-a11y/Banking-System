@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.AdminController.Admindetail;
-import com.example.demo.UserController.InnerUserController;
 import com.example.demo.UserController.Userdetail;
 @Service
 public class UserService {
@@ -44,6 +43,10 @@ public class UserService {
         userRepository.save(admin);
         return admin;
      
+    }
+    public void saveUpdatedUser(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
   

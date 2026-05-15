@@ -29,6 +29,7 @@ public class Transaction {
     Account senderAccount;
     @ManyToOne
     Account receiverAccount;
+    private String TransactionType;
     
 
 }
