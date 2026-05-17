@@ -69,6 +69,9 @@ public class TransactionService {
         transaction.setSenderAccount(reciever);
         transaction.setMadeAT(LocalDateTime.now());
         transaction.setTransactionType("Deposit");
+        accountRepository.save(reciever);
+        
+        transactionRepository.save(transaction);
         return "Deposit successful";
         
     }
@@ -88,6 +91,8 @@ public class TransactionService {
         transaction.setSenderAccount(reciever);
         transaction.setMadeAT(LocalDateTime.now());
         transaction.setTransactionType("Withdrawal");
+        transactionRepository.save(transaction);
+        accountRepository.save(reciever);
         return "Withdrawal successful";
        
     }

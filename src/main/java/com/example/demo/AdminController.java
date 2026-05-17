@@ -34,6 +34,8 @@ public class AdminController {
     private UserRepository userRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @PostMapping("/admin/accounts/create-account")
 public ResponseEntity<?>createAccount(@RequestBody Account account){
@@ -162,6 +164,30 @@ public ResponseEntity<?> getAllAccounts() {
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        @GetMapping("/admin/transactions")
+    public ResponseEntity<?> getAllBankTransactions() {
+        // Grab literally every transaction in the database
+        List<Transaction> allTransactions = transactionRepository.findAll();
+        
+        List<Map<String, Object>> responseList = new ArrayList<>();
+        
+        for (Transaction tx : allTransactions) {
+            Map<String, Object> map = new HashMap<>();
+            
+            // Note: Use your exact variable names (like getTransId() instead of getId() if needed!)
+            map.put("transactionId", tx.getTransactionId()); 
+            map.put("senderAccount", tx.getSenderAccount() != null ? tx.getSenderAccount().getAccno() : "SYSTEM");
+            map.put("receiverAccount", tx.getReceiverAccount() != null ? tx.getReceiverAccount().getAccno() : "SYSTEM");
+            map.put("transactionType", tx.getTransactionType());
+            map.put("date", tx.getMadeAT().toString());
+            map.put("amount", tx.getTransAmount());
+            
+            responseList.add(map);
+        }
+
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
+    }
     }
 
 

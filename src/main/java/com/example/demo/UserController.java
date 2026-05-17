@@ -1,6 +1,8 @@
 package com.example.demo;
 
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,6 +73,24 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
+    
+    @GetMapping("/users/get-a-user")
+    public ResponseEntity<?> getUsers(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userRepository.findByUserName(userName);
+        if(user!=null){
+        HashMap<String, Object> map = new HashMap<>();
+        Account account = user.getUserAccount();
+        map.put("balance", account.getBalance());
+        map.put("accountNo", account.getAccno());
+        map.put("userName", user.getUserName());
+        map.put("accId", account.getAccid());
+        return new ResponseEntity<>(map,HttpStatus.OK);
+    }
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+}
+
     @PostMapping("/users/create-a-user")
     public ResponseEntity<?> createUser(@RequestBody Userdetail innerUserController){
         User user = userService.createUser(innerUserController);
